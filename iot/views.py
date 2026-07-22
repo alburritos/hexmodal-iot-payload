@@ -1,4 +1,4 @@
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -22,7 +22,8 @@ class PayloadCreateView(APIView):
         serializer.is_valid(raise_exception=True)
 
         try:
-            payload = serializer.save()
+            with transaction.atomic():
+                payload = serializer.save()
         except IntegrityError:
             # Raised when fCnt was already recorded for this device.
             return Response(
