@@ -10,8 +10,8 @@ A small Django REST Framework application that receives IoT device payloads, aut
 
 ```bash
 # Clone the repository and enter the project directory
-git clone <your-repo-url>
-cd hex_7-22-26
+git clone https://github.com/alburritos/hexmodal-iot-payload.git
+cd hexmodal-iot-payload
 
 # Create and activate a virtual environment
 python3 -m venv venv
