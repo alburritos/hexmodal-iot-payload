@@ -113,3 +113,24 @@ iot/               # App with Device & Payload models, API endpoint
 ## Django Admin
 
 Visit `http://127.0.0.1:8000/admin/` to browse devices and payloads after creating a superuser.
+
+## Glossary
+
+This app ingests **LoRaWAN-style** uplink messages — JSON payloads sent by IoT devices through a radio gateway. The terms below appear in the incoming JSON and throughout the codebase.
+
+| Term | Meaning |
+|------|---------|
+| **LoRaWAN** | A low-power, wide-area networking protocol used by many IoT sensors. Devices transmit small data packets to nearby gateways, which forward them to an application server (this app). |
+| **devEUI** | **Device Extended Unique Identifier.** A 16-character hex ID that uniquely identifies a physical IoT device (e.g. `abcdabcdabcdabcd`). Used to link each payload to a `Device` record. Stored as `dev_eui` in the database (snake_case). |
+| **fCnt** | **Frame Counter.** A number that increments with each transmission from a device. Used to detect duplicate or replayed messages — the same `(devEUI, fCnt)` pair is rejected with `409 Conflict`. Stored as `f_cnt` in the database. |
+| **data** | The sensor reading, **Base64-encoded**. IoT devices send raw bytes; gateways often wrap them in Base64 for JSON transport. Example: `AQ==` decodes to the byte `0x01`. |
+| **data_hex** | The decoded `data` field shown as a **hexadecimal string**. Example: `AQ==` → `01`. Stored on the `Payload` model for easy reading and debugging. |
+| **rxInfo** | **Receive Info.** An array of objects describing how gateways received the transmission. Stored as `rx_info` in the database. Each entry can include gateway ID, signal strength, and timing. |
+| **txInfo** | **Transmit Info.** An object describing how the device sent the transmission (frequency, data rate, etc.). Stored as `tx_info` in the database. |
+| **gatewayID** | The unique identifier of the **LoRa gateway** that received the device's signal and forwarded the message. |
+| **rssi** | **Received Signal Strength Indicator.** Measured in dBm (e.g. `-57`). Higher (less negative) values mean a stronger signal. |
+| **loRaSNR** | **LoRa Signal-to-Noise Ratio.** Measured in dB (e.g. `10`). Higher values mean a cleaner signal relative to background noise. |
+| **frequency** | The radio frequency (in Hz) the device used to transmit (e.g. `868100000` = 868.1 MHz, a common LoRaWAN band in Europe). |
+| **dr** | **Data Rate.** An index (0–7 in LoRaWAN) indicating the transmission speed and spreading factor. Higher data rates send faster but over shorter distances. |
+| **passing / failing** | The app's evaluation of a payload. If the decoded `data` value equals `1`, the payload is **passing**; any other value is **failing**. |
+| **latest_status** | A field on the `Device` model tracking the most recent pass/fail result from that device's latest accepted payload. |
