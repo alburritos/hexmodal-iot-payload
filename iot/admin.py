@@ -1,3 +1,10 @@
+"""
+Django admin configuration for browsing devices and payloads.
+
+Useful during development to inspect ingested data without hitting the API.
+Register at: http://127.0.0.1:8000/admin/
+"""
+
 from django.contrib import admin
 
 from .models import Device, Payload

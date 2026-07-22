@@ -37,11 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'rest_framework.authtoken',
-    'iot',
+    'rest_framework',              # Django REST Framework for the API endpoint
+    'rest_framework.authtoken',    # Token model used for IoT device authentication
+    'iot',                         # Our IoT payload ingestion app
 ]
 
+# DRF settings: require a valid token on API requests unless a view opts out.
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',

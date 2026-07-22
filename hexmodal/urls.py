@@ -19,5 +19,6 @@ from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # All IoT API routes live under /api/ (see iot/urls.py).
     path('api/', include('iot.urls')),
 ]
